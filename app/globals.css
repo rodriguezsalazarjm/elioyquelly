@@ -129,7 +129,8 @@ select {
   font-size: clamp(4rem, 18vw, 6rem);
 }
 
-.hero-stage-bg {
+.hero-stage-bg,
+.hero-message-band {
   background-image:
     linear-gradient(180deg, rgba(12, 29, 14, 0.42), rgba(12, 29, 14, 0.96)),
     radial-gradient(circle at 50% 0%, rgba(247, 243, 234, 0.14), transparent 34rem),
@@ -138,13 +139,37 @@ select {
   background-size: cover;
 }
 
-.hero-photo-panel {
+.hero-cinema-section {
+  min-height: 100svh;
+  background: #050705;
+}
+
+.hero-cinema {
   position: relative;
-  min-height: clamp(360px, 56vh, 620px);
-  border-bottom: 1px solid rgba(247, 243, 234, 0.16);
-  background-image: url("/hero.webp");
-  background-position: center 48%;
-  background-size: cover;
+  width: 100%;
+  height: 100svh;
+  min-height: 560px;
+  background: #050705;
+  isolation: isolate;
+}
+
+.hero-cinema::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.62)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 24%, transparent 66%, rgba(0, 0, 0, 0.96));
+  pointer-events: none;
+}
+
+.hero-cinema-text {
+  position: absolute;
+  inset: auto auto 10% 6%;
+  z-index: 3;
+  width: min(760px, calc(100% - 32px));
+  text-shadow: 0 20px 70px rgba(0, 0, 0, 0.72);
 }
 
 .hero-title {
@@ -232,17 +257,19 @@ select {
     background-position: center bottom;
   }
 
-  .hero-photo-bg {
-    background-position: 58% center;
-  }
-
-  .hero-stage-bg {
+  .hero-stage-bg,
+  .hero-message-band {
     background-position: center bottom;
   }
 
-  .hero-photo-panel {
-    min-height: min(58vh, 460px);
-    background-position: 53% center;
+  .hero-cinema {
+    height: 100svh;
+    min-height: 560px;
+  }
+
+  .hero-cinema-text {
+    inset: auto 16px 9% 16px;
+    width: auto;
   }
 
   .gift-section-bg {
@@ -259,8 +286,9 @@ select {
     padding: 2rem 1rem;
   }
 
-  .hero-photo-panel {
-    min-height: 50vh;
+  .hero-cinema {
+    height: 100svh;
+    min-height: 520px;
   }
 
   .mobile-tight-glass {

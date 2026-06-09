@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CalendarDays, Heart, MailCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Countdown } from "./Countdown";
 import { Footer } from "./Footer";
 import { GiftModal } from "./GiftModal";
@@ -21,8 +21,41 @@ type HomeClientProps = {
   dateLabel: string;
 };
 
+const heroSlides = [
+  {
+    image: "/hero1.webp",
+    title: "Una historia que comienza para siempre",
+    phrase: "Cada momento compartido nos trajo hasta este día.",
+  },
+  {
+    image: "/hero2.webp",
+    title: "Dos vidas que se hacen una sola",
+    phrase: "Un amor que eligió quedarse, crecer y celebrar.",
+  },
+  {
+    image: "/antepag.webp",
+    title: "Celebra con nosotros",
+    phrase: "Una noche para abrazar la alegría y guardar recuerdos.",
+  },
+];
+
 export function HomeClient({ settings, dateLabel }: HomeClientProps) {
   const [entered, setEntered] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (!entered) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 6500);
+
+    return () => window.clearInterval(timer);
+  }, [entered]);
+
+  const slide = heroSlides[activeSlide];
 
   return (
     <>
@@ -32,46 +65,87 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
       <main>
         {entered ? (
           <button
-            className="focus-ring fixed left-3 top-3 z-40 inline-flex items-center gap-2 rounded-full border border-[#F7F3EA]/24 bg-[#0C1D0E]/55 px-3 py-2.5 text-xs font-semibold text-[#F7F3EA] shadow-2xl backdrop-blur-xl transition hover:bg-[#F7F3EA] hover:text-[#0C1D0E] sm:left-4 sm:top-4 sm:px-4 sm:py-3 sm:text-sm"
+            aria-label="Volver a la preinvitación"
+            className="focus-ring fixed left-3 top-3 z-40 grid h-11 w-11 place-items-center rounded-full border border-[#F7F3EA]/24 bg-[#0C1D0E]/55 text-[#F7F3EA] shadow-2xl backdrop-blur-xl transition hover:bg-[#F7F3EA] hover:text-[#0C1D0E] sm:left-4 sm:top-4"
             onClick={() => setEntered(false)}
             type="button"
           >
             <ArrowLeft size={17} />
-            Preinvitación
           </button>
         ) : null}
 
-        <section className="hero-stage-bg relative min-h-screen overflow-hidden px-3 py-6 sm:px-4 sm:py-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(247,243,234,0.18),transparent_28rem)]" />
-          <div className="absolute inset-0 opacity-45">
-            <div className="absolute left-1/2 top-12 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-[#837E5E]/30" />
-            <div className="absolute left-8 top-1/4 h-48 w-48 rounded-full border border-[#F7F3EA]/10" />
-            <div className="absolute bottom-10 right-8 h-64 w-64 rounded-full border border-[#837E5E]/20" />
+        <section className="hero-cinema-section relative overflow-hidden">
+          <div className="hero-cinema">
+            <div className="absolute inset-0 bg-black" />
+            <AnimatePresence mode="wait">
+              <motion.div
+                animate={{ opacity: 1, scale: 1.12 }}
+                className="absolute inset-0 bg-cover bg-center"
+                exit={{ opacity: 0, scale: 1.16 }}
+                initial={{ opacity: 0, scale: 1 }}
+                key={slide.image}
+                style={{ backgroundImage: `url(${slide.image})` }}
+                transition={{
+                  opacity: { duration: 1.35, ease: "easeInOut" },
+                  scale: { duration: 7.8, ease: "easeOut" },
+                }}
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(0,0,0,0.02),rgba(0,0,0,0.34)_48%,rgba(0,0,0,0.9)_100%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/82" />
+            <div className="hero-cinema-text">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: 18 }}
+                  key={slide.title}
+                  transition={{ duration: 1.1, ease: "easeOut" }}
+                >
+                  <p className="responsive-kicker mb-4 inline-flex items-center gap-2 rounded-full border border-[#F7F3EA]/28 bg-[#0C1D0E]/34 px-3 py-2 text-[0.68rem] font-semibold uppercase text-[#F7F3EA] backdrop-blur-xl sm:px-4 sm:text-xs">
+                    <Sparkles size={15} />
+                    Zequelly & Elio
+                  </p>
+                  <h1 className="text-balance font-display text-4xl leading-tight text-[#F7F3EA] sm:text-6xl lg:text-7xl">
+                    {slide.title}
+                  </h1>
+                  <p className="text-pretty mt-5 max-w-xl font-display text-xl leading-8 text-[#E2E5E2] sm:text-2xl sm:leading-9">
+                    {slide.phrase}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="absolute bottom-5 right-5 z-[3] flex gap-2">
+              {heroSlides.map((item, index) => (
+                <button
+                  aria-label={`Ver imagen ${index + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    index === activeSlide ? "w-9 bg-[#F7F3EA]" : "w-4 bg-[#F7F3EA]/40"
+                  }`}
+                  key={item.image}
+                  onClick={() => setActiveSlide(index)}
+                  type="button"
+                />
+              ))}
+            </div>
           </div>
-          <div className="container-shell relative flex min-h-[calc(100vh-64px)] flex-col justify-center">
+        </section>
+
+        <section className="hero-message-band relative overflow-hidden py-10 sm:py-14">
+          <div className="container-shell relative">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(247,243,234,0.18),transparent_28rem)]" />
+            <div className="absolute inset-0 opacity-45">
+              <div className="absolute left-1/2 top-12 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-[#837E5E]/30" />
+              <div className="absolute left-8 top-1/4 h-48 w-48 rounded-full border border-[#F7F3EA]/10" />
+              <div className="absolute bottom-10 right-8 h-64 w-64 rounded-full border border-[#837E5E]/20" />
+            </div>
             <motion.div
               animate={{ y: 0, opacity: 1 }}
               className="liquid-glass mobile-tight-glass mx-auto w-full max-w-4xl overflow-hidden rounded-[2rem]"
               initial={{ y: 28, opacity: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="hero-photo-panel">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0C1D0E]/10 to-[#0C1D0E]/76" />
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-5">
-                  <p className="responsive-kicker inline-flex items-center gap-2 rounded-full border border-[#F7F3EA]/28 bg-[#0C1D0E]/34 px-3 py-2 text-[0.68rem] font-semibold uppercase text-[#F7F3EA] backdrop-blur-xl sm:px-4 sm:text-xs">
-                    <Sparkles size={15} />
-                    Guarda esta fecha
-                  </p>
-                  <p className="hidden font-script text-4xl text-[#F7F3EA] sm:block">
-                    Zequelly & Elio
-                  </p>
-                </div>
-              </div>
-
               <div className="relative z-10 px-5 py-7 sm:px-9 sm:py-10">
-                <h1 className="hero-title text-balance font-display leading-tight text-[#F7F3EA]">
-                  Una historia que comienza para siempre
-                </h1>
                 <p className="hero-copy text-pretty mt-7 max-w-2xl leading-8 text-[#E2E5E2] sm:leading-9">
                   Después de tantos momentos compartidos, llegó el día de celebrar nuestro amor
                   junto a las personas que más queremos.
