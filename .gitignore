@@ -9,3 +9,10 @@ vercel
 *.log
 
 .vercel
+
+# Archivos de video/media pesados (usar almacenamiento externo)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
