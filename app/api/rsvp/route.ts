@@ -12,8 +12,8 @@ export async function POST(request: Request) {
       guest,
       message:
         guest.status === "declined"
-          ? "Gracias por avisarnos. Aunque nos habría encantado verte, agradecemos mucho tu cariño y buenos deseos."
-          : "Gracias por confirmar. Nos alegra mucho saber que serás parte de este día tan especial.",
+          ? "Gracias por avisarnos. Aunque nos habría encantado contar con ustedes, agradecemos mucho su cariño y buenos deseos."
+          : "Gracias por confirmar. Nos alegra mucho saber que serán parte de este día tan especial.",
     });
   } catch (error) {
     return NextResponse.json(

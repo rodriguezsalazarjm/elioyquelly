@@ -1,30 +1,58 @@
+import { isAdminAuthenticated } from "@/lib/auth";
 import { listGuests } from "@/lib/guests";
+import { getInvitationUrl } from "@/lib/utils";
+import { NextResponse } from "next/server";
+
+const HEADERS = [
+  "display_name",
+  "group_name",
+  "phone",
+  "email",
+  "max_guests",
+  "status",
+  "confirmed_count",
+  "food_restrictions",
+  "message",
+  "has_opened_invitation",
+  "opened_at",
+  "confirmed_at",
+  "code",
+  "invitation_url",
+  "updated_at",
+];
 
 export async function GET() {
+  if (!(await isAdminAuthenticated()))
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+
   const guests = await listGuests();
-  const headers = [
-    "full_name",
-    "group_name",
-    "status",
-    "confirmed_count",
-    "max_companions",
-    "food_restrictions",
-    "message",
-    "updated_at",
-  ];
-  const rows = guests.map((guest) =>
-    headers
-      .map((header) => {
-        const value = guest[header as keyof typeof guest];
-        return `"${String(value ?? "").replaceAll('"', '""')}"`;
-      })
+
+  const rows = guests.map((g) =>
+    [
+      g.display_name,
+      g.group_name,
+      g.phone ?? "",
+      g.email ?? "",
+      g.max_guests,
+      g.status,
+      g.confirmed_count,
+      g.food_restrictions,
+      g.message,
+      g.has_opened_invitation ? "Sí" : "No",
+      g.opened_at ?? "",
+      g.confirmed_at ?? "",
+      g.code,
+      getInvitationUrl(g.code),
+      g.updated_at,
+    ]
+      .map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`)
       .join(","),
   );
 
-  return new Response([headers.join(","), ...rows].join("\n"), {
+  return new Response([HEADERS.join(","), ...rows].join("\n"), {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": 'attachment; filename="confirmaciones-zequelly-elio.csv"',
+      "Content-Disposition": 'attachment; filename="invitados-zequelly-elio.csv"',
     },
   });
 }

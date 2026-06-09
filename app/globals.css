@@ -333,6 +333,65 @@ select {
   left: -88px;
 }
 
+/* ── Admin UI ─────────────────────────────────────────────────────────────── */
+.admin-input {
+  border: 1px solid rgba(131, 126, 94, 0.3);
+  background: white;
+  color: #15351f;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.admin-input:focus {
+  border-color: #154d35;
+}
+.admin-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #15351f;
+}
+.admin-btn-primary {
+  background: #154d35;
+  color: #f7f3ea;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.admin-btn-primary:hover {
+  background: #0c1d0e;
+}
+.admin-btn-outline {
+  border: 1px solid rgba(131, 126, 94, 0.35);
+  color: #15351f;
+  background: white;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: border-color 0.15s;
+}
+.admin-btn-outline:hover {
+  border-color: #154d35;
+}
+.admin-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  color: #837e5e;
+  transition: background 0.12s, color 0.12s;
+}
+.admin-icon-btn:hover {
+  background: rgba(131, 126, 94, 0.12);
+  color: #15351f;
+}
+
 .focus-ring:focus-visible {
   outline: 2px solid var(--ivory);
   outline-offset: 3px;
