@@ -1,7 +1,7 @@
 import type { Settings } from "./types";
 
 export const settings: Settings = {
-  wedding_date: "2026-11-14T20:00:00-03:00",
+  wedding_date: "2026-10-31T20:00:00-03:00",
   rsvp_deadline: "2026-10-20",
   ceremony_place: "Ceremonia",
   ceremony_time: "18:00 hrs",

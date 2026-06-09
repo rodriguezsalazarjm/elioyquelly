@@ -24,16 +24,19 @@ type HomeClientProps = {
 const heroSlides = [
   {
     image: "/hero1.webp",
+    bgPosition: "center 38%",
     title: "Una historia que comienza para siempre",
     phrase: "Cada momento compartido nos trajo hasta este día.",
   },
   {
     image: "/hero2.webp",
+    bgPosition: "center 30%",
     title: "Dos vidas que se hacen una sola",
     phrase: "Un amor que eligió quedarse, crecer y celebrar.",
   },
   {
     image: "/antepag.webp",
+    bgPosition: "center 36%",
     title: "Celebra con nosotros",
     phrase: "Una noche para abrazar la alegría y guardar recuerdos.",
   },
@@ -77,22 +80,21 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
         <section className="hero-cinema-section relative overflow-hidden">
           <div className="hero-cinema">
             <div className="absolute inset-0 bg-black" />
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div
                 animate={{ opacity: 1, scale: 1.12 }}
-                className="absolute inset-0 bg-cover bg-center"
+                className="absolute inset-0 bg-cover"
                 exit={{ opacity: 0, scale: 1.16 }}
                 initial={{ opacity: 0, scale: 1 }}
                 key={slide.image}
-                style={{ backgroundImage: `url(${slide.image})` }}
+                style={{ backgroundImage: `url(${slide.image})`, backgroundPosition: slide.bgPosition }}
                 transition={{
                   opacity: { duration: 1.35, ease: "easeInOut" },
                   scale: { duration: 7.8, ease: "easeOut" },
                 }}
               />
             </AnimatePresence>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(0,0,0,0.02),rgba(0,0,0,0.34)_48%,rgba(0,0,0,0.9)_100%)]" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/82" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-black/80" />
             <div className="hero-cinema-text">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -131,13 +133,14 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
           </div>
         </section>
 
-        <section className="hero-message-band relative overflow-hidden py-10 sm:py-14">
+        <section className="hero-message-band relative overflow-hidden py-14 sm:py-20">
           <div className="container-shell relative">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(247,243,234,0.18),transparent_28rem)]" />
-            <div className="absolute inset-0 opacity-45">
-              <div className="absolute left-1/2 top-12 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-[#837E5E]/30" />
-              <div className="absolute left-8 top-1/4 h-48 w-48 rounded-full border border-[#F7F3EA]/10" />
-              <div className="absolute bottom-10 right-8 h-64 w-64 rounded-full border border-[#837E5E]/20" />
+            {/* Ornamentos botánicos */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-50">
+              <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/3 rounded-full border border-[#837E5E]/25" />
+              <div className="absolute left-1/2 top-0 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/4 rounded-full border border-[#F7F3EA]/10" />
+              <div className="absolute -left-24 top-1/3 h-64 w-64 rounded-full border border-[#837E5E]/18" />
+              <div className="absolute -right-20 bottom-1/4 h-80 w-80 rounded-full border border-[#837E5E]/15" />
             </div>
             <motion.div
               animate={{ y: 0, opacity: 1 }}
@@ -145,19 +148,24 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
               initial={{ y: 28, opacity: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="relative z-10 px-5 py-7 sm:px-9 sm:py-10">
-                <p className="hero-copy text-pretty mt-7 max-w-2xl leading-8 text-[#E2E5E2] sm:leading-9">
+              <div className="relative z-10 px-6 py-8 sm:px-10 sm:py-12">
+                <p className="responsive-kicker text-center text-xs font-semibold uppercase text-[#A39F88]">
+                  Zequelly & Elio
+                </p>
+                <div className="gold-line mx-auto mt-4 w-32" />
+                <p className="hero-copy text-pretty mx-auto mt-8 max-w-2xl text-center leading-8 text-[#E2E5E2] sm:leading-9">
                   Después de tantos momentos compartidos, llegó el día de celebrar nuestro amor
                   junto a las personas que más queremos.
                 </p>
-                <p className="hero-copy text-pretty mt-5 max-w-2xl leading-8 text-[#E2E5E2] sm:leading-9">
+                <p className="hero-copy text-pretty mx-auto mt-5 max-w-2xl text-center leading-8 text-[#E2E5E2] sm:leading-9">
                   Queremos que seas parte de esta noche especial, llena de alegría, música,
                   abrazos y recuerdos que guardaremos para siempre.
                 </p>
-                <p className="font-script mt-8 text-4xl text-[#F7F3EA] sm:text-5xl">
+                <div className="gold-line mx-auto mt-8 w-20" />
+                <p className="font-script mt-6 text-center text-4xl text-[#F7F3EA] sm:text-5xl">
                   Con amor, Zequelly & Elio
                 </p>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                   <a
                     className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#F7F3EA] px-5 py-4 font-semibold text-[#0C1D0E] sm:px-6"
                     href="#rsvp"
@@ -222,23 +230,34 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
           </div>
         </Section>
 
-        <section className="gift-section-bg relative overflow-hidden py-14 sm:py-24" id="regalo">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(247,243,234,0.18),transparent_26rem)]" />
-          <div className="container-shell relative">
-            <div className="liquid-glass mobile-tight-glass mx-auto max-w-3xl rounded-[2rem] px-5 py-9 text-center sm:px-10 sm:py-12">
-              <p className="responsive-kicker text-xs font-semibold uppercase text-[#E2E5E2]">
-                Tu presencia es nuestro mejor regalo
-              </p>
-              <h2 className="font-display mt-4 text-4xl text-[#F7F3EA] sm:text-5xl">
-                Lluvia de amor
-              </h2>
-              <div className="gold-line mx-auto my-7 w-44" />
-              <p className="mx-auto mb-8 max-w-2xl leading-8 text-[#F7F3EA]">
-                Tu presencia es nuestro mejor regalo. Pero si deseas tener un detalle con nosotros,
-                puedes hacerlo a través de las siguientes opciones.
-              </p>
-              <GiftModal settings={settings} />
+        <section className="gift-section-bg relative overflow-hidden py-20 sm:py-28" id="regalo">
+          {/* Luz cenital suave */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_0%,rgba(247,243,234,0.16),transparent)]" />
+          {/* Ornamentos botánicos */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
+            <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#837E5E]/30" />
+            <div className="absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#F7F3EA]/12" />
+            <div className="absolute -left-16 top-1/4 h-56 w-56 rounded-full border border-[#837E5E]/20" />
+            <div className="absolute -right-12 bottom-1/4 h-72 w-72 rounded-full border border-[#837E5E]/18" />
+          </div>
+
+          <div className="container-shell relative text-center">
+            <p className="responsive-kicker text-xs font-semibold uppercase text-[#A39F88]">
+              Tu presencia es nuestro mejor regalo
+            </p>
+            {/* Ícono corazón decorativo */}
+            <div className="mx-auto mt-6 grid h-14 w-14 place-items-center rounded-full border border-[#837E5E]/40 bg-[#0C1D0E]/40 backdrop-blur-sm">
+              <Heart className="text-[#A39F88]" size={24} strokeWidth={1.3} />
             </div>
+            <h2 className="font-display mt-5 text-4xl text-[#F7F3EA] sm:text-5xl">
+              Lluvia de amor
+            </h2>
+            <div className="gold-line mx-auto my-7 w-44" />
+            <p className="mx-auto mb-10 max-w-lg leading-8 text-[#E2E5E2]">
+              Tu presencia es lo que más nos importa. Pero si deseas tener un detalle especial
+              con nosotros, aquí tienes cómo hacerlo.
+            </p>
+            <GiftModal settings={settings} />
           </div>
         </section>
 
