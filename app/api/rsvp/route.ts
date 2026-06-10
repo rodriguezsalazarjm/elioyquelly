@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendRsvpNotification } from "@/lib/email";
 import { updateGuestRsvp } from "@/lib/guests";
 import { rsvpSchema } from "@/lib/validations";
 
@@ -7,6 +8,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const input = rsvpSchema.parse(body);
     const guest = await updateGuestRsvp(input);
+
+    // Notificación por correo (no bloquea ni rompe la confirmación si falla)
+    await sendRsvpNotification(guest).catch(() => {});
 
     return NextResponse.json({
       guest,
