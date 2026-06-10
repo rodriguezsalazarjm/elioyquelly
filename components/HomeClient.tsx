@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Heart, MailCheck, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Countdown } from "./Countdown";
 import { Footer } from "./Footer";
 import { GiftModal } from "./GiftModal";
@@ -51,6 +51,13 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
   const [activeSlide, setActiveSlide] = useState(0);
   const [rsvpOpen, setRsvpOpen] = useState(false);
 
+  // Ref al <video> que vive siempre en el DOM.
+  // Al hacer click en "Abrir nuestra historia" llamamos .play()
+  // síncronamente dentro del event handler, satisfaciendo así la
+  // política de autoplay de los navegadores (que bloquean audio
+  // si play() no ocurre en el mismo call stack que el gesto del usuario).
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
   const entered = phase === "entered";
 
   useEffect(() => {
@@ -65,24 +72,62 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
 
   return (
     <>
+      {/* ── Video Save The Date ─────────────────────────────────────────────
+          El <video> vive siempre en el DOM (opacity-0 cuando no está activo)
+          para que .play() se pueda llamar síncronamente desde el click handler.
+          Cuando la fase es "video" lo mostramos (opacity-100) y el overlay
+          VideoSplash añade la vignette y el botón "Saltar".
+      ─────────────────────────────────────────────────────────────────── */}
+      {settings.save_the_date_url && (
+        // eslint-disable-next-line jsx-a11y/media-has-caption
+        <video
+          ref={videoRef}
+          className={`fixed inset-0 z-[60] h-full w-full bg-black object-cover transition-opacity duration-700 ease-in-out ${
+            phase === "video" ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+          muted
+          onEnded={() => setPhase("entered")}
+          onError={() => setPhase("entered")}
+          // Cortar el video al segundo 10 → entramos a la experiencia principal
+          onTimeUpdate={(e) => {
+            if (e.currentTarget.currentTime >= 10) {
+              setPhase("entered");
+            }
+          }}
+          playsInline
+          preload="auto"
+          src={settings.save_the_date_url}
+        />
+      )}
+
+      {/* Overlay: vignette + botón "Saltar" */}
+      <AnimatePresence>
+        {phase === "video" && (
+          <VideoSplash onComplete={() => setPhase("entered")} />
+        )}
+      </AnimatePresence>
+
       {/* Portada inicial */}
       <AnimatePresence>
         {phase === "intro" && (
           <IntroScreen
             dateLabel={dateLabel}
-            onEnter={() =>
-              settings.save_the_date_url ? setPhase("video") : setPhase("entered")
-            }
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Video Save The Date */}
-      <AnimatePresence>
-        {phase === "video" && (
-          <VideoSplash
-            onComplete={() => setPhase("entered")}
-            src={settings.save_the_date_url}
+            onEnter={() => {
+              if (settings.save_the_date_url) {
+                // ► Llamada síncrona dentro del event handler = política de
+                //   autoplay satisfecha aunque el video tenga audio.
+                // Primero cambiamos la fase para mostrar el video visualmente,
+                // luego iniciamos la reproducción (que ya está en marcha gracias
+                // al gesto del usuario aún activo).
+                setPhase("video");
+                videoRef.current?.play().catch(() => {
+                  // Edge-case: si aun así el navegador bloquea, vamos directo
+                  setPhase("entered");
+                });
+              } else {
+                setPhase("entered");
+              }
+            }}
           />
         )}
       </AnimatePresence>

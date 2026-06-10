@@ -17,7 +17,7 @@ export const settings: Settings = {
     "https://www.google.com/maps/search/?api=1&query=Av.+Jos%C3%A9+Miguel+Carrera+3520%2C+San+Miguel",
   ceremony_waze_url:
     "https://waze.com/ul?q=Av.+Jos%C3%A9+Miguel+Carrera+3520%2C+San+Miguel",
-  spotify_playlist_url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX50QitC6Oqtn",
+  spotify_playlist_url: "https://open.spotify.com/embed/playlist/3pLPvX6ife6zxKBN8gx4i1",
   main_song_url: "https://archive.org/download/ChristinaPerriAThousandYearsPianoCelloCoverThePianoGuys/Christina%20Perri%20--%20A%20Thousand%20years%20%28Piano_Cello%20Cover%29%20ThePianoGuys.mp3",
   bank_holder_name: "Zequelly y Elio",
   bank_name: "Banco de los Sueños",
