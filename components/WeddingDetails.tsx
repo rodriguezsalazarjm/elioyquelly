@@ -19,20 +19,23 @@ export function WeddingDetails({ settings }: WeddingDetailsProps) {
     },
     {
       icon: Gem,
-      title: "Dress code",
-      lines: ["Elegante Formal", "Tonos sugeridos: verde, dorado, negro, nude o colores neutros."],
+      title: "Dress Code",
+      lines: ["Elegante Formal"],
     },
   ];
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {cards.map((card) => (
-        <article className="ivory-panel botanical rounded-2xl p-5 sm:p-6" key={card.title}>
-          <card.icon className="mb-6 text-[#837E5E]" size={28} strokeWidth={1.4} />
+        <article
+          className="ivory-panel botanical rounded-2xl p-5 sm:p-6 flex flex-col items-center text-center"
+          key={card.title}
+        >
+          <card.icon className="mb-5 text-[#837E5E]" size={28} strokeWidth={1.4} />
           <h3 className="font-display text-2xl text-[#154D35]">{card.title}</h3>
-          <div className="mt-5 space-y-2 overflow-wrap-anywhere text-sm leading-6 text-[#15351f]">
+          <div className="mt-4 space-y-2 overflow-wrap-anywhere text-sm leading-6 text-[#15351f]">
             {card.lines.map((line) => (
-              <p key={line}>{line}</p>
+              <p className="capitalize" key={line}>{line}</p>
             ))}
           </div>
         </article>

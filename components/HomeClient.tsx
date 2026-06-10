@@ -182,7 +182,7 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
                   abrazos y recuerdos que guardaremos para siempre.
                 </p>
                 <div className="gold-line mx-auto mt-8 w-20" />
-                <p className="font-script mt-6 text-center text-4xl text-[#F7F3EA] sm:text-5xl">
+                <p className="font-script mt-6 whitespace-nowrap text-center text-3xl text-[#F7F3EA] sm:text-5xl">
                   Con amor, Zequelly & Elio
                 </p>
               </div>
@@ -199,18 +199,58 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
 
         <Section eyebrow="Celebra con nosotros" id="detalles" title="Detalles de la boda">
           <WeddingDetails settings={settings} />
-          {/* Botón confirmar asistencia debajo del dress code */}
-          <div className="mt-10 flex justify-center">
-            <button
-              className="focus-ring inline-flex items-center gap-2.5 rounded-full bg-[#F7F3EA] px-7 py-4 font-semibold text-[#0C1D0E] shadow-lg transition hover:bg-[#E2E5E2] hover:scale-[1.02]"
-              onClick={() => setRsvpOpen(true)}
-              type="button"
-            >
-              <MailCheck size={18} />
-              Confirmar asistencia
-            </button>
-          </div>
         </Section>
+
+        {/* ── Sección confirmar asistencia ── */}
+        <section className="hero-message-band relative overflow-hidden py-16 sm:py-24" id="rsvp">
+          {/* Ornamentos */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-40">
+            <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#837E5E]/22" />
+            <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#F7F3EA]/10" />
+            <div className="absolute -left-20 top-1/3 h-56 w-56 rounded-full border border-[#837E5E]/16" />
+            <div className="absolute -right-16 bottom-1/4 h-64 w-64 rounded-full border border-[#837E5E]/14" />
+          </div>
+          <div className="container-shell relative">
+            <motion.div
+              animate={{ y: 0, opacity: 1 }}
+              className="liquid-glass mobile-tight-glass mx-auto w-full max-w-2xl overflow-hidden rounded-[2rem]"
+              initial={{ y: 24, opacity: 0 }}
+              transition={{ duration: 0.75 }}
+            >
+              <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-14 text-center">
+                <div className="mx-auto mb-5 grid h-12 w-12 place-items-center rounded-full border border-[#F7F3EA]/30 bg-[#F7F3EA]/10">
+                  <Heart className="text-[#F7F3EA]" size={20} strokeWidth={1.4} />
+                </div>
+                <p className="responsive-kicker text-xs font-semibold uppercase text-[#A39F88]">
+                  Nos encantaría contar contigo
+                </p>
+                <div className="gold-line mx-auto mt-4 w-28" />
+                <h2 className="font-display mt-6 text-3xl text-[#F7F3EA] sm:text-4xl">
+                  Confirma tu asistencia
+                </h2>
+                <p className="hero-copy text-pretty mx-auto mt-5 max-w-lg text-center leading-8 text-[#E2E5E2] sm:leading-9">
+                  Tu presencia significa muchísimo para nosotros. Para preparar cada detalle con cariño,
+                  te pedimos confirmar antes del{" "}
+                  <span className="font-semibold text-[#F7F3EA]">
+                    {new Date(settings.rsvp_deadline).toLocaleDateString("es-CL", {
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </span>.
+                </p>
+                <div className="gold-line mx-auto mt-7 w-16" />
+                <button
+                  className="focus-ring mt-8 inline-flex items-center gap-2.5 rounded-full bg-[#F7F3EA] px-7 py-4 font-semibold text-[#0C1D0E] shadow-xl transition hover:bg-[#E2E5E2] hover:scale-[1.02]"
+                  onClick={() => setRsvpOpen(true)}
+                  type="button"
+                >
+                  <MailCheck size={18} />
+                  Confirmar asistencia
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
         <Section eyebrow="Cómo llegar" title="Para llegar sin complicaciones">
           <p className="mx-auto mb-8 max-w-2xl text-center leading-8 text-[#E2E5E2]">
@@ -235,10 +275,7 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
           </div>
 
           <div className="container-shell relative text-center">
-            <p className="responsive-kicker text-xs font-semibold uppercase text-[#A39F88]">
-              Tu presencia es nuestro mejor regalo
-            </p>
-            <div className="mx-auto mt-6 grid h-14 w-14 place-items-center rounded-full border border-[#837E5E]/40 bg-[#0C1D0E]/40 backdrop-blur-sm">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-[#837E5E]/40 bg-[#0C1D0E]/40 backdrop-blur-sm">
               <Heart className="text-[#A39F88]" size={24} strokeWidth={1.3} />
             </div>
             <h2 className="font-display mt-5 text-4xl text-[#F7F3EA] sm:text-5xl">
