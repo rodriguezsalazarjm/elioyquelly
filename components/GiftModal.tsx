@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Banknote, Check, Copy, CreditCard, Heart, X } from "lucide-react";
+import { Banknote, Check, Copy, CreditCard, Gift, Heart, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import type { Settings } from "@/lib/types";
 
@@ -43,22 +43,15 @@ export function GiftModal({ settings }: GiftModalProps) {
           <span className="gift-card-cta">Ver datos →</span>
         </button>
 
-        {/* Card: MercadoPago — solo si está habilitado */}
-        {settings.mercadopago_enabled ? (
-          <a
-            className="gift-card group"
-            href={settings.mercadopago_public_url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <div className="gift-card-icon">
-              <CreditCard size={24} strokeWidth={1.4} />
-            </div>
-            <p className="gift-card-title">MercadoPago</p>
-            <p className="gift-card-desc">Pago rápido y seguro desde tu teléfono</p>
-            <span className="gift-card-cta gift-card-cta--outline">Ir a MercadoPago →</span>
-          </a>
-        ) : null}
+        {/* Card: MercadoPago — abre el detalle con montos sugeridos */}
+        <button className="gift-card group" onClick={() => setOpen(true)} type="button">
+          <div className="gift-card-icon">
+            <CreditCard size={24} strokeWidth={1.4} />
+          </div>
+          <p className="gift-card-title">MercadoPago</p>
+          <p className="gift-card-desc">Aporta en un tap con tarjeta o saldo, sin complicaciones</p>
+          <span className="gift-card-cta gift-card-cta--outline">Elegir monto →</span>
+        </button>
       </div>
 
       {/* Modal popup de transferencia */}
@@ -94,7 +87,7 @@ export function GiftModal({ settings }: GiftModalProps) {
                   <Heart className="text-[#A39F88]" size={22} strokeWidth={1.4} />
                 </div>
                 <h3 className="font-display text-2xl text-[#F7F3EA]">Lluvia de amor</h3>
-                <p className="mt-1 text-sm text-[#A39F88]">Datos de transferencia</p>
+                <p className="mt-1 text-sm text-[#A39F88]">Transferencia o MercadoPago</p>
                 <div className="gold-line mx-auto mt-5 w-24" />
               </div>
 
@@ -148,7 +141,49 @@ export function GiftModal({ settings }: GiftModalProps) {
                   </AnimatePresence>
                 </button>
 
-                <p className="mt-4 text-center text-xs text-[#837E5E]">
+                {/* ── MercadoPago: montos sugeridos ── */}
+                <div className="mt-7 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-[#837E5E]/20" />
+                  <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#837E5E]">
+                    <Sparkles size={13} />
+                    o regala con MercadoPago
+                  </span>
+                  <div className="h-px flex-1 bg-[#837E5E]/20" />
+                </div>
+
+                <p className="mt-4 text-center text-sm leading-6 text-[#15351f]">
+                  Si prefieres aportar al instante con tarjeta o saldo, elige un monto
+                  y completa el pago en segundos. ¡Cada gesto nos llena el corazón!
+                </p>
+
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <a
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-[#154D35]/15 bg-white px-4 py-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-[#154D35]/40 hover:shadow-md active:scale-[0.98]"
+                    href={settings.mercadopago_link_50k}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Gift className="text-[#154D35] transition group-hover:scale-110" size={22} strokeWidth={1.5} />
+                    <span className="font-display text-xl text-[#154D35]">$50.000</span>
+                    <span className="text-[0.7rem] font-semibold uppercase tracking-wide text-[#837E5E]">
+                      Un cariño dulce
+                    </span>
+                  </a>
+                  <a
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-[#154D35]/15 bg-white px-4 py-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-[#154D35]/40 hover:shadow-md active:scale-[0.98]"
+                    href={settings.mercadopago_link_100k}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Heart className="text-[#154D35] transition group-hover:scale-110" size={22} strokeWidth={1.5} />
+                    <span className="font-display text-xl text-[#154D35]">$100.000</span>
+                    <span className="text-[0.7rem] font-semibold uppercase tracking-wide text-[#837E5E]">
+                      Un abrazo enorme
+                    </span>
+                  </a>
+                </div>
+
+                <p className="mt-5 text-center text-xs text-[#837E5E]">
                   También puedes cerrar tocando fuera de esta ventana
                 </p>
               </div>
