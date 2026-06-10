@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getGuestSummary } from "@/lib/guests";
 import type { Guest } from "@/lib/types";
@@ -355,12 +355,18 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
 
   // ── API helpers ─────────────────────────────────────────────────────────────
   const refetch = async () => {
-    const res = await fetch("/api/admin/guests");
+    const res = await fetch("/api/admin/guests", { cache: "no-store" });
     if (res.ok) {
       const data = await res.json() as { guests: Guest[] };
       setGuests(data.guests);
     }
   };
+
+  // Al abrir el panel, siempre traer datos frescos (evita HTML cacheado del CDN)
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSave = async (data: CreateGuestInput, id?: string) => {
     const url = id ? `/api/admin/guests/${id}` : "/api/admin/guests";
