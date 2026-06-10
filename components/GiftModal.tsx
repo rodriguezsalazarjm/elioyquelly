@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Banknote, Check, Copy, CreditCard, Gift, Heart, Sparkles, X } from "lucide-react";
+import { Check, Copy, Gift, Heart, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import type { Settings } from "@/lib/types";
 
@@ -32,27 +32,19 @@ export function GiftModal({ settings }: GiftModalProps) {
 
   return (
     <>
-      <div className="gift-cards-grid">
-        {/* Card: Transferencia */}
-        <button className="gift-card group" onClick={() => setOpen(true)} type="button">
-          <div className="gift-card-icon">
-            <Banknote size={24} strokeWidth={1.4} />
-          </div>
-          <p className="gift-card-title">Transferencia</p>
-          <p className="gift-card-desc">Datos bancarios listos para copiar en un tap</p>
-          <span className="gift-card-cta">Ver datos →</span>
-        </button>
-
-        {/* Card: MercadoPago — abre el detalle con montos sugeridos */}
-        <button className="gift-card group" onClick={() => setOpen(true)} type="button">
-          <div className="gift-card-icon">
-            <CreditCard size={24} strokeWidth={1.4} />
-          </div>
-          <p className="gift-card-title">MercadoPago</p>
-          <p className="gift-card-desc">Aporta en un tap con tarjeta o saldo, sin complicaciones</p>
-          <span className="gift-card-cta gift-card-cta--outline">Elegir monto →</span>
-        </button>
-      </div>
+      {/* Tarjeta única: abre el modal con transferencia + MercadoPago */}
+      <button
+        className="gift-card group mx-auto max-w-sm"
+        onClick={() => setOpen(true)}
+        type="button"
+      >
+        <div className="gift-card-icon">
+          <Gift size={24} strokeWidth={1.4} />
+        </div>
+        <p className="gift-card-title">Regalar a los novios</p>
+        <p className="gift-card-desc">Transferencia o MercadoPago, lo que más te acomode</p>
+        <span className="gift-card-cta">Ver opciones →</span>
+      </button>
 
       {/* Modal popup de transferencia */}
       <AnimatePresence>
@@ -183,9 +175,15 @@ export function GiftModal({ settings }: GiftModalProps) {
                   </a>
                 </div>
 
-                <p className="mt-5 text-center text-xs text-[#837E5E]">
-                  También puedes cerrar tocando fuera de esta ventana
-                </p>
+                {/* Botón cerrar */}
+                <button
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-[#154D35]/25 px-5 py-3 text-sm font-semibold text-[#154D35] transition hover:bg-[#154D35]/5 active:scale-[0.98]"
+                  onClick={() => setOpen(false)}
+                  type="button"
+                >
+                  <X size={15} />
+                  Cerrar
+                </button>
               </div>
             </motion.div>
           </motion.div>
