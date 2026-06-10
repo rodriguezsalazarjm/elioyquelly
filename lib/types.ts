@@ -1,5 +1,11 @@
 export type GuestStatus = "pending" | "confirmed" | "declined";
 
+/** Cada integrante de una invitación con su confirmación individual */
+export type GuestMember = {
+  name: string;
+  confirmed: boolean;
+};
+
 export type Guest = {
   id: string;
   code: string;
@@ -8,6 +14,7 @@ export type Guest = {
   email: string | null;
   group_name: string;
   max_guests: number;
+  members: GuestMember[];
   status: GuestStatus;
   confirmed_count: number;
   food_restrictions: string;

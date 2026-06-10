@@ -1,11 +1,19 @@
 import { z } from "zod";
 
+export const guestMemberSchema = z.object({
+  name: z.string().min(1).max(120),
+  confirmed: z.boolean(),
+});
+
 export const rsvpSchema = z.object({
   code: z.string().min(2),
-  status: z.enum(["confirmed", "declined"]),
-  confirmed_count: z.number().int().min(0).max(50),
-  food_restrictions: z.string().max(500).optional().default(""),
-  message: z.string().max(1000).optional().default(""),
+  members: z.array(guestMemberSchema).default([]),
+  // El mensaje de amor es obligatorio
+  message: z
+    .string()
+    .trim()
+    .min(3, "Por favor déjales un mensaje de amor a los novios 💛")
+    .max(1000),
 });
 
 export const createGuestSchema = z.object({
@@ -19,6 +27,8 @@ export const createGuestSchema = z.object({
     .or(z.literal("")),
   group_name: z.string().min(1, "El grupo es obligatorio").max(80),
   max_guests: z.number().int().min(1, "Mínimo 1 cupo").max(20),
+  // Nombres de los integrantes, uno por línea (opcional)
+  members: z.array(z.string().min(1).max(120)).optional(),
 });
 
 export const updateGuestSchema = z.object({
@@ -27,6 +37,9 @@ export const updateGuestSchema = z.object({
   email: z.string().email().max(120).nullable().optional(),
   group_name: z.string().min(1).max(80).optional(),
   max_guests: z.number().int().min(1).max(20).optional(),
+  // Nombres de los integrantes (uno por elemento); el servidor preserva las
+  // confirmaciones existentes que coincidan por nombre.
+  members: z.array(z.string().min(1).max(120)).optional(),
   status: z.enum(["pending", "confirmed", "declined"]).optional(),
   confirmed_count: z.number().int().min(0).max(50).optional(),
   food_restrictions: z.string().max(500).optional(),
@@ -39,6 +52,8 @@ export const importRowSchema = z.object({
   email: z.string().optional().default(""),
   group_name: z.string().optional().default(""),
   max_guests: z.coerce.number().int().min(1).default(1),
+  // Integrantes separados por ";" o "|" — ej: "José Rojas; María Rojas"
+  members: z.string().optional().default(""),
 });
 
 export type RsvpInput = z.output<typeof rsvpSchema>;

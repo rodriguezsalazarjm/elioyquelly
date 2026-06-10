@@ -59,6 +59,9 @@ type GuestFormProps = {
 function GuestForm({ initial, existingGroups, onSave, onClose }: GuestFormProps) {
   const [saving, setSaving] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [membersText, setMembersText] = useState(
+    initial?.members?.map((m) => m.name).join("\n") ?? "",
+  );
 
   const form = useForm<CreateGuestInput>({
     resolver: zodResolver(createGuestSchema),
@@ -71,11 +74,16 @@ function GuestForm({ initial, existingGroups, onSave, onClose }: GuestFormProps)
     },
   });
 
+  const memberNames = membersText
+    .split("\n")
+    .map((n) => n.trim())
+    .filter(Boolean);
+
   const submit = form.handleSubmit(async (data) => {
     setSaving(true);
     setApiError("");
     try {
-      await onSave(data, initial?.id);
+      await onSave({ ...data, members: memberNames }, initial?.id);
     } catch (e) {
       setApiError(e instanceof Error ? e.message : "Error al guardar.");
       setSaving(false);
@@ -143,6 +151,9 @@ function GuestForm({ initial, existingGroups, onSave, onClose }: GuestFormProps)
             type="number"
             {...form.register("max_guests", { valueAsNumber: true })}
           />
+          <span className="mt-1 text-xs text-[#A39F88]">
+            Se ajusta solo si listas integrantes abajo.
+          </span>
           {form.formState.errors.max_guests && (
             <span className="mt-1 text-xs text-red-600">
               {form.formState.errors.max_guests.message}
@@ -150,6 +161,22 @@ function GuestForm({ initial, existingGroups, onSave, onClose }: GuestFormProps)
           )}
         </label>
       </div>
+
+      {/* Integrantes nombrados (uno por línea) */}
+      <label className="admin-label">
+        Integrantes <span className="font-normal text-[#A39F88]">(uno por línea — cada uno podrá confirmarse por separado)</span>
+        <textarea
+          className="admin-input mt-1 min-h-24 font-mono text-xs"
+          onChange={(e) => setMembersText(e.target.value)}
+          placeholder={"José Rojas\nMaría Rojas"}
+          value={membersText}
+        />
+        {memberNames.length > 0 && (
+          <span className="mt-1 text-xs text-[#154D35]">
+            {memberNames.length} integrante{memberNames.length !== 1 ? "s" : ""} · cupos = {memberNames.length}
+          </span>
+        )}
+      </label>
 
       {apiError ? (
         <p className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{apiError}</p>
@@ -200,15 +227,16 @@ function ImportModal({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm leading-6 text-[#837E5E]">
-        Pega el contenido CSV con encabezados en la primera fila. Columnas aceptadas:
+        Pega el contenido CSV con encabezados en la primera fila. Columnas aceptadas
+        (la columna <strong>members</strong> separa los nombres con <code>;</code>):
       </p>
       <code className="rounded-xl bg-[#154D35]/8 px-4 py-3 text-xs text-[#154D35]">
-        display_name, phone, email, group_name, max_guests
+        display_name, phone, email, group_name, max_guests, members
       </code>
       <textarea
         className="admin-input min-h-40 font-mono text-xs"
         onChange={(e) => setCsv(e.target.value)}
-        placeholder={"display_name,phone,email,group_name,max_guests\nFamilia García,,,,4"}
+        placeholder={'display_name,phone,email,group_name,max_guests,members\nFamilia Rojas,,,Familia novia,2,José Rojas; María Rojas'}
         value={csv}
       />
 
@@ -537,7 +565,7 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
                     "Estado",
                     "Cupos",
                     "Invitación",
-                    "Restricciones",
+                    "Personas / mensaje",
                     "Acciones",
                   ].map((h) => (
                     <th className="px-4 py-3.5 font-semibold" key={h}>
@@ -579,12 +607,32 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
                           </span>
                         )}
                       </td>
-                      <td className="max-w-[160px] px-4 py-3.5">
-                        <p className="truncate text-xs text-[#837E5E]">
-                          {g.food_restrictions || "—"}
-                        </p>
+                      <td className="max-w-[230px] px-4 py-3.5">
+                        {g.members && g.members.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {g.members.map((m, i) => (
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                                  m.confirmed
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-gray-100 text-gray-500"
+                                }`}
+                                key={`${m.name}-${i}`}
+                              >
+                                {m.confirmed ? (
+                                  <Check size={10} strokeWidth={3} />
+                                ) : (
+                                  <X size={10} strokeWidth={3} />
+                                )}
+                                {m.name}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-[#A39F88]">—</span>
+                        )}
                         {g.message && (
-                          <p className="mt-0.5 truncate text-xs text-[#A39F88]">
+                          <p className="mt-1 line-clamp-2 text-xs italic text-[#837E5E]">
                             "{g.message}"
                           </p>
                         )}

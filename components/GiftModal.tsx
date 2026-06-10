@@ -43,7 +43,7 @@ export function GiftModal({ settings }: GiftModalProps) {
         </div>
         <p className="gift-card-title">Regalar a los novios</p>
         <p className="gift-card-desc">Transferencia o MercadoPago, lo que más te acomode</p>
-        <span className="gift-card-cta">Ver opciones →</span>
+        <span className="gift-card-cta">Quiero regalar →</span>
       </button>
 
       {/* Modal popup de transferencia */}
@@ -51,7 +51,7 @@ export function GiftModal({ settings }: GiftModalProps) {
         {open ? (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={() => setOpen(false)}
@@ -59,32 +59,32 @@ export function GiftModal({ settings }: GiftModalProps) {
           >
             <motion.div
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              className="w-full max-w-md overflow-hidden rounded-[1.75rem] shadow-2xl"
+              className="flex max-h-[calc(100dvh-3rem)] w-full max-w-md flex-col overflow-hidden rounded-[1.75rem] shadow-2xl"
               exit={{ y: 20, opacity: 0, scale: 0.96 }}
               initial={{ y: 20, opacity: 0, scale: 0.96 }}
               onClick={(e) => e.stopPropagation()}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Header verde */}
-              <div className="relative bg-[#154D35] px-7 pb-7 pt-8 text-center">
+              {/* Header verde — fijo, con X siempre visible */}
+              <div className="relative flex-shrink-0 bg-[#154D35] px-7 pb-6 pt-7 text-center">
                 <button
                   aria-label="Cerrar"
-                  className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-[#F7F3EA]/20 text-[#F7F3EA]/50 transition hover:border-[#F7F3EA]/40 hover:text-[#F7F3EA]"
+                  className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-[#F7F3EA]/12 text-[#F7F3EA] transition hover:bg-[#F7F3EA]/25"
                   onClick={() => setOpen(false)}
                   type="button"
                 >
-                  <X size={15} />
+                  <X size={17} />
                 </button>
-                <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full border border-[#A39F88]/40 bg-[#0C1D0E]/30">
+                <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full border border-[#A39F88]/40 bg-[#0C1D0E]/30">
                   <Heart className="text-[#A39F88]" size={22} strokeWidth={1.4} />
                 </div>
                 <h3 className="font-display text-2xl text-[#F7F3EA]">Lluvia de amor</h3>
                 <p className="mt-1 text-sm text-[#A39F88]">Transferencia o MercadoPago</p>
-                <div className="gold-line mx-auto mt-5 w-24" />
+                <div className="gold-line mx-auto mt-4 w-24" />
               </div>
 
-              {/* Cuerpo marfil */}
-              <div className="bg-[#F7F3EA] px-7 py-6">
+              {/* Cuerpo marfil — scrollable */}
+              <div className="flex-1 overflow-y-auto bg-[#F7F3EA] px-7 py-6">
                 <div className="divide-y divide-[#837E5E]/18">
                   {bankDetails.map(([label, value]) => (
                     <div className="flex items-center justify-between gap-4 py-3.5" key={label}>
@@ -174,16 +174,6 @@ export function GiftModal({ settings }: GiftModalProps) {
                     </span>
                   </a>
                 </div>
-
-                {/* Botón cerrar */}
-                <button
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-[#154D35]/25 px-5 py-3 text-sm font-semibold text-[#154D35] transition hover:bg-[#154D35]/5 active:scale-[0.98]"
-                  onClick={() => setOpen(false)}
-                  type="button"
-                >
-                  <X size={15} />
-                  Cerrar
-                </button>
               </div>
             </motion.div>
           </motion.div>

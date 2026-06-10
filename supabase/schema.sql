@@ -11,6 +11,9 @@ create table if not exists guests (
   email                 text,
   group_name            text not null default '',
   max_guests            int  not null default 1,
+  -- Integrantes de la invitación con su confirmación individual:
+  -- [{ "name": "José Rojas", "confirmed": false }, { "name": "María Rojas", "confirmed": true }]
+  members               jsonb not null default '[]'::jsonb,
   status                text not null default 'pending',
   confirmed_count       int  not null default 0,
   food_restrictions     text not null default '',
@@ -21,6 +24,9 @@ create table if not exists guests (
   created_at            timestamptz not null default now(),
   updated_at            timestamptz not null default now()
 );
+
+-- Migración para tablas ya existentes (añade la columna si falta):
+alter table guests add column if not exists members jsonb not null default '[]'::jsonb;
 
 -- Índices útiles
 create index if not exists guests_status_idx    on guests (status);
