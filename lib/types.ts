@@ -30,6 +30,8 @@ export type Settings = {
   party_address: string;
   google_maps_url: string;
   waze_url: string;
+  ceremony_google_maps_url: string;
+  ceremony_waze_url: string;
   spotify_playlist_url: string;
   main_song_url: string;
   bank_holder_name: string;

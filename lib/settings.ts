@@ -3,16 +3,20 @@ import type { Settings } from "./types";
 export const settings: Settings = {
   wedding_date: "2026-10-31T20:00:00-03:00",
   rsvp_deadline: "2026-10-20",
-  ceremony_place: "Ceremonia",
+  ceremony_place: "Boda eclesiástica",
   ceremony_time: "18:00 hrs",
   ceremony_address: "Av. José Miguel Carrera 3520, Paradero 6, San Miguel",
-  party_place: "Celebración",
+  party_place: "Full Party",
   party_time: "19:00 a 02:00 hrs",
-  party_address: "Chacabuco 389, 9250000 Maipú, Región Metropolitana",
+  party_address: "Chacabuco 389, Maipú, Región Metropolitana",
   google_maps_url:
-    "https://www.google.com/maps/search/?api=1&query=Chacabuco%20389%2C%209250000%20Maip%C3%BA%2C%20Regi%C3%B3n%20Metropolitana",
+    "https://www.google.com/maps/search/?api=1&query=Chacabuco+389%2C+Maip%C3%BA%2C+Regi%C3%B3n+Metropolitana",
   waze_url:
-    "https://waze.com/ul?q=Chacabuco%20389%2C%209250000%20Maip%C3%BA%2C%20Regi%C3%B3n%20Metropolitana",
+    "https://waze.com/ul?q=Chacabuco+389%2C+Maip%C3%BA",
+  ceremony_google_maps_url:
+    "https://www.google.com/maps/search/?api=1&query=Av.+Jos%C3%A9+Miguel+Carrera+3520%2C+San+Miguel",
+  ceremony_waze_url:
+    "https://waze.com/ul?q=Av.+Jos%C3%A9+Miguel+Carrera+3520%2C+San+Miguel",
   spotify_playlist_url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX50QitC6Oqtn",
   main_song_url: "",
   bank_holder_name: "Zequelly y Elio",

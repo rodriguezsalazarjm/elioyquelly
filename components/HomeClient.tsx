@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, CalendarDays, Heart, MailCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Heart, MailCheck, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Countdown } from "./Countdown";
 import { Footer } from "./Footer";
@@ -52,7 +52,7 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
     if (!entered) return;
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % heroSlides.length);
-    }, 6500);
+    }, 4000);
     return () => window.clearInterval(timer);
   }, [entered]);
 
@@ -185,23 +185,6 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
                 <p className="font-script mt-6 text-center text-4xl text-[#F7F3EA] sm:text-5xl">
                   Con amor, Zequelly & Elio
                 </p>
-                <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                  <button
-                    className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#F7F3EA] px-5 py-4 font-semibold text-[#0C1D0E] transition hover:bg-[#E2E5E2] sm:px-6"
-                    onClick={() => setRsvpOpen(true)}
-                    type="button"
-                  >
-                    <MailCheck size={18} />
-                    Confirmar asistencia
-                  </button>
-                  <a
-                    className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full border border-[#837E5E]/60 px-5 py-4 font-semibold text-[#F7F3EA] sm:px-6"
-                    href="#detalles"
-                  >
-                    <CalendarDays size={18} />
-                    Ver detalles
-                  </a>
-                </div>
               </div>
             </motion.div>
           </div>
@@ -216,10 +199,17 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
 
         <Section eyebrow="Celebra con nosotros" id="detalles" title="Detalles de la boda">
           <WeddingDetails settings={settings} />
-          <p className="mx-auto mt-8 max-w-3xl text-center leading-8 text-[#E2E5E2]">
-            Queremos que disfrutes la noche con nosotros de principio a fin. Te recomendamos llegar
-            con unos minutos de anticipación.
-          </p>
+          {/* Botón confirmar asistencia debajo del dress code */}
+          <div className="mt-10 flex justify-center">
+            <button
+              className="focus-ring inline-flex items-center gap-2.5 rounded-full bg-[#F7F3EA] px-7 py-4 font-semibold text-[#0C1D0E] shadow-lg transition hover:bg-[#E2E5E2] hover:scale-[1.02]"
+              onClick={() => setRsvpOpen(true)}
+              type="button"
+            >
+              <MailCheck size={18} />
+              Confirmar asistencia
+            </button>
+          </div>
         </Section>
 
         <Section eyebrow="Cómo llegar" title="Para llegar sin complicaciones">
