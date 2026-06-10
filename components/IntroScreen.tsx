@@ -39,7 +39,7 @@ export function IntroScreen({ dateLabel, onEnter }: IntroScreenProps) {
           onClick={onEnter}
           type="button"
         >
-          Entrar a la invitación
+          Abrir nuestra historia
         </button>
       </div>
     </motion.div>

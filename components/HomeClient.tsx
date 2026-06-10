@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CalendarDays, Heart, MailCheck, Sparkles } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Countdown } from "./Countdown";
 import { Footer } from "./Footer";
@@ -11,14 +10,16 @@ import { InfoPopup } from "./InfoPopup";
 import { IntroScreen } from "./IntroScreen";
 import { MapButtons } from "./MapButtons";
 import { MusicPlayer } from "./MusicPlayer";
+import { RSVPModal } from "./RSVPModal";
 import { Section } from "./Section";
 import { SpotifyPlaylist } from "./SpotifyPlaylist";
 import { WeddingDetails } from "./WeddingDetails";
-import type { Settings } from "@/lib/types";
+import type { Guest, Settings } from "@/lib/types";
 
 type HomeClientProps = {
   settings: Settings;
   dateLabel: string;
+  guest?: Guest | null;
 };
 
 const heroSlides = [
@@ -42,19 +43,16 @@ const heroSlides = [
   },
 ];
 
-export function HomeClient({ settings, dateLabel }: HomeClientProps) {
+export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProps) {
   const [entered, setEntered] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [rsvpOpen, setRsvpOpen] = useState(false);
 
   useEffect(() => {
-    if (!entered) {
-      return;
-    }
-
+    if (!entered) return;
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % heroSlides.length);
     }, 6500);
-
     return () => window.clearInterval(timer);
   }, [entered]);
 
@@ -64,6 +62,9 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
     <>
       <AnimatePresence>{!entered ? <IntroScreen dateLabel={dateLabel} onEnter={() => setEntered(true)} /> : null}</AnimatePresence>
       <MusicPlayer enabled={entered} src={settings.main_song_url} />
+
+      {/* RSVP Modal */}
+      <RSVPModal guest={guest} isOpen={rsvpOpen} onClose={() => setRsvpOpen(false)} />
 
       <main>
         {entered ? (
@@ -77,6 +78,7 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
           </button>
         ) : null}
 
+        {/* Hero cinema */}
         <section className="hero-cinema-section relative overflow-hidden">
           <div className="hero-cinema">
             <div className="absolute inset-0 bg-black" />
@@ -133,6 +135,7 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
           </div>
         </section>
 
+        {/* Mensaje + CTA confirmar asistencia */}
         <section className="hero-message-band relative overflow-hidden py-14 sm:py-20">
           <div className="container-shell relative">
             {/* Ornamentos botánicos */}
@@ -149,6 +152,23 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
               transition={{ duration: 0.8 }}
             >
               <div className="relative z-10 px-6 py-8 sm:px-10 sm:py-12">
+                {/* Badge invitado personalizado */}
+                {guest && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 flex items-center justify-center gap-2 rounded-full border border-[#F7F3EA]/20 bg-[#F7F3EA]/10 px-4 py-2 text-sm text-[#F7F3EA] backdrop-blur-sm"
+                    initial={{ opacity: 0, y: -8 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                  >
+                    <Heart size={13} strokeWidth={1.5} />
+                    <span className="font-semibold">{guest.display_name}</span>
+                    <span className="text-[#A39F88]">·</span>
+                    <span className="text-[#A39F88]">
+                      {guest.max_guests === 1 ? "1 cupo reservado" : `${guest.max_guests} cupos reservados`}
+                    </span>
+                  </motion.div>
+                )}
+
                 <p className="responsive-kicker text-center text-xs font-semibold uppercase text-[#A39F88]">
                   Zequelly & Elio
                 </p>
@@ -166,13 +186,14 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
                   Con amor, Zequelly & Elio
                 </p>
                 <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                  <a
-                    className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#F7F3EA] px-5 py-4 font-semibold text-[#0C1D0E] sm:px-6"
-                    href="#rsvp"
+                  <button
+                    className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#F7F3EA] px-5 py-4 font-semibold text-[#0C1D0E] transition hover:bg-[#E2E5E2] sm:px-6"
+                    onClick={() => setRsvpOpen(true)}
+                    type="button"
                   >
                     <MailCheck size={18} />
-                    Confirma tu asistencia
-                  </a>
+                    Confirmar asistencia
+                  </button>
                   <a
                     className="responsive-action focus-ring inline-flex items-center justify-center gap-2 rounded-full border border-[#837E5E]/60 px-5 py-4 font-semibold text-[#F7F3EA] sm:px-6"
                     href="#detalles"
@@ -188,7 +209,7 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
 
         <Section eyebrow="Cuenta regresiva" title="Falta muy poco para nuestro gran día">
           <p className="mx-auto mb-8 max-w-2xl text-center leading-8 text-[#E2E5E2]">
-            Cada día nos acerca más al momento en que diremos ‘sí’ y celebraremos junto a ustedes.
+            Cada día nos acerca más al momento en que diremos 'sí' y celebraremos junto a ustedes.
           </p>
           <Countdown target={settings.wedding_date} />
         </Section>
@@ -199,22 +220,6 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
             Queremos que disfrutes la noche con nosotros de principio a fin. Te recomendamos llegar
             con unos minutos de anticipación.
           </p>
-        </Section>
-
-        <Section eyebrow="Nos encantaría contar contigo" id="rsvp" title="Confirma tu asistencia">
-          <div className="glass-panel mx-auto max-w-3xl rounded-[1.5rem] p-5 text-center sm:p-7">
-            <Heart className="mx-auto mb-5 text-[#A39F88]" size={30} strokeWidth={1.4} />
-            <p className="leading-8 text-[#E2E5E2]">
-              Tu presencia significa muchísimo para nosotros. Para ayudarnos a preparar cada detalle
-              con cariño, por favor confirma tu asistencia antes del {settings.rsvp_deadline}.
-            </p>
-            <Link
-              className="responsive-action focus-ring mt-7 inline-flex items-center justify-center rounded-full bg-[#F7F3EA] px-6 py-4 font-semibold text-[#0C1D0E] sm:px-7"
-              href="/invitado/familia-rojas"
-            >
-              Confirmar asistencia
-            </Link>
-          </div>
         </Section>
 
         <Section eyebrow="Cómo llegar" title="Para llegar sin complicaciones">
@@ -231,9 +236,7 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
         </Section>
 
         <section className="gift-section-bg relative overflow-hidden py-20 sm:py-28" id="regalo">
-          {/* Luz cenital suave */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_0%,rgba(247,243,234,0.16),transparent)]" />
-          {/* Ornamentos botánicos */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
             <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#837E5E]/30" />
             <div className="absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#F7F3EA]/12" />
@@ -245,7 +248,6 @@ export function HomeClient({ settings, dateLabel }: HomeClientProps) {
             <p className="responsive-kicker text-xs font-semibold uppercase text-[#A39F88]">
               Tu presencia es nuestro mejor regalo
             </p>
-            {/* Ícono corazón decorativo */}
             <div className="mx-auto mt-6 grid h-14 w-14 place-items-center rounded-full border border-[#837E5E]/40 bg-[#0C1D0E]/40 backdrop-blur-sm">
               <Heart className="text-[#A39F88]" size={24} strokeWidth={1.3} />
             </div>

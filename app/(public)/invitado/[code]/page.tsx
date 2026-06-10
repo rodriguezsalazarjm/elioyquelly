@@ -1,6 +1,7 @@
-import Link from "next/link";
-import { RSVPForm } from "@/components/RSVPForm";
+import { HomeClient } from "@/components/HomeClient";
 import { getGuestByCode, markGuestOpened } from "@/lib/guests";
+import { formatWeddingDate, settings } from "@/lib/settings";
+import Link from "next/link";
 
 type GuestPageProps = {
   params: Promise<{ code: string }>;
@@ -36,19 +37,10 @@ export default async function GuestPage({ params }: GuestPageProps) {
   }
 
   return (
-    <main className="min-h-screen px-4 py-12">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-8 text-center">
-          <Link
-            className="text-xs font-semibold uppercase tracking-[0.25em] text-[#A39F88]"
-            href="/"
-          >
-            Zequelly & Elio
-          </Link>
-          <div className="gold-line mx-auto mt-4 w-24" />
-        </div>
-        <RSVPForm guest={guest} />
-      </div>
-    </main>
+    <HomeClient
+      dateLabel={formatWeddingDate()}
+      guest={guest}
+      settings={settings}
+    />
   );
 }
