@@ -18,3 +18,6 @@ vercel
 *.webm
 
 .vercel
+
+# Datos privados de invitados (no subir nunca)
+_private/
