@@ -47,18 +47,37 @@ const heroSlides = [
 type Phase = "intro" | "video" | "entered";
 
 export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProps) {
-  const [phase, setPhase] = useState<Phase>("intro");
+  // Nuevo flujo: el video arranca de inmediato ("video"); al segundo 10
+  // aparece la portada "Abrir nuestra historia" sobre el video ("intro");
+  // al hacer click se entra a la web y suena la música ("entered").
+  // Si no hay video configurado, empezamos directo en la portada.
+  const [phase, setPhase] = useState<Phase>(
+    settings.save_the_date_url ? "video" : "intro",
+  );
   const [activeSlide, setActiveSlide] = useState(0);
   const [rsvpOpen, setRsvpOpen] = useState(false);
 
-  // Ref al <video> que vive siempre en el DOM.
-  // Al hacer click en "Abrir nuestra historia" llamamos .play()
-  // síncronamente dentro del event handler, satisfaciendo así la
-  // política de autoplay de los navegadores (que bloquean audio
-  // si play() no ocurre en el mismo call stack que el gesto del usuario).
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const entered = phase === "entered";
+  const videoVisible = phase === "video" || phase === "intro";
+
+  // Autoplay del video al cargar la página. Al estar silenciado (muted),
+  // los navegadores permiten la reproducción automática sin gesto previo.
+  // El atributo autoPlay hace el trabajo principal; este play() es respaldo.
+  // Un timer de 10s garantiza que la portada aparezca aunque el video
+  // se demore en cargar o el navegador throttlee onTimeUpdate.
+  useEffect(() => {
+    if (phase !== "video") return;
+    videoRef.current?.play().catch(() => {
+      /* autoPlay + el timer se encargan; no saltamos por un rechazo transitorio */
+    });
+    const timer = window.setTimeout(() => {
+      setPhase((p) => (p === "video" ? "intro" : p));
+    }, 10_000);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!entered) return;
@@ -73,25 +92,25 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
   return (
     <>
       {/* ── Video Save The Date ─────────────────────────────────────────────
-          El <video> vive siempre en el DOM (opacity-0 cuando no está activo)
-          para que .play() se pueda llamar síncronamente desde el click handler.
-          Cuando la fase es "video" lo mostramos (opacity-100) y el overlay
-          VideoSplash añade la vignette y el botón "Saltar".
+          Arranca solo al cargar (muted → autoplay permitido). Permanece como
+          fondo durante la portada ("intro") y se oculta al entrar a la web.
+          Al segundo 10 disparamos la aparición de la portada encima del video.
       ─────────────────────────────────────────────────────────────────── */}
       {settings.save_the_date_url && (
         // eslint-disable-next-line jsx-a11y/media-has-caption
         <video
           ref={videoRef}
-          className={`fixed inset-0 z-[60] h-full w-full bg-black object-cover transition-opacity duration-700 ease-in-out ${
-            phase === "video" ? "opacity-100" : "pointer-events-none opacity-0"
+          autoPlay
+          className={`fixed inset-0 z-[40] h-full w-full bg-black object-cover transition-opacity duration-700 ease-in-out ${
+            videoVisible ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
+          loop
           muted
-          onEnded={() => setPhase("entered")}
-          onError={() => setPhase("entered")}
-          // Cortar el video al segundo 10 → entramos a la experiencia principal
+          onError={() => setPhase((p) => (p === "video" ? "intro" : p))}
+          // Al segundo 10 mostramos la portada sobre el video (sigue de fondo)
           onTimeUpdate={(e) => {
             if (e.currentTarget.currentTime >= 10) {
-              setPhase("entered");
+              setPhase((p) => (p === "video" ? "intro" : p));
             }
           }}
           playsInline
@@ -100,34 +119,20 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
         />
       )}
 
-      {/* Overlay: vignette + botón "Saltar" */}
+      {/* Overlay durante el video (0–10s): botón "Saltar" para adelantar */}
       <AnimatePresence>
         {phase === "video" && (
-          <VideoSplash onComplete={() => setPhase("entered")} />
+          <VideoSplash onComplete={() => setPhase("intro")} />
         )}
       </AnimatePresence>
 
-      {/* Portada inicial */}
+      {/* Portada "Abrir nuestra historia" — sobre el video de fondo */}
       <AnimatePresence>
         {phase === "intro" && (
           <IntroScreen
             dateLabel={dateLabel}
-            onEnter={() => {
-              if (settings.save_the_date_url) {
-                // ► Llamada síncrona dentro del event handler = política de
-                //   autoplay satisfecha aunque el video tenga audio.
-                // Primero cambiamos la fase para mostrar el video visualmente,
-                // luego iniciamos la reproducción (que ya está en marcha gracias
-                // al gesto del usuario aún activo).
-                setPhase("video");
-                videoRef.current?.play().catch(() => {
-                  // Edge-case: si aun así el navegador bloquea, vamos directo
-                  setPhase("entered");
-                });
-              } else {
-                setPhase("entered");
-              }
-            }}
+            onEnter={() => setPhase("entered")}
+            overVideo={Boolean(settings.save_the_date_url)}
           />
         )}
       </AnimatePresence>

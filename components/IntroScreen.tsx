@@ -6,14 +6,22 @@ import { Heart } from "lucide-react";
 type IntroScreenProps = {
   dateLabel: string;
   onEnter: () => void;
+  /** Cuando es true se muestra translúcida sobre el video de fondo */
+  overVideo?: boolean;
 };
 
-export function IntroScreen({ dateLabel, onEnter }: IntroScreenProps) {
+export function IntroScreen({ dateLabel, onEnter, overVideo = false }: IntroScreenProps) {
   return (
     <motion.div
-      className="intro-photo-bg fixed inset-0 z-50 grid place-items-center bg-[#0C1D0E] px-3 py-3 text-center sm:px-6"
+      animate={{ opacity: 1 }}
+      className={`fixed inset-0 z-50 grid place-items-center px-3 py-3 text-center sm:px-6 ${
+        overVideo
+          ? "bg-gradient-to-b from-black/55 via-black/35 to-black/75 backdrop-blur-[2px]"
+          : "intro-photo-bg bg-[#0C1D0E]"
+      }`}
       exit={{ opacity: 0, scale: 1.02 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      initial={{ opacity: overVideo ? 0 : 1 }}
+      transition={{ duration: overVideo ? 1 : 0.8, ease: "easeInOut" }}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_22%,rgba(247,243,234,0.08),transparent_26rem)]" />
       <div className="botanical liquid-glass intro-card w-full max-w-lg rounded-[2rem] px-5 py-9 sm:px-12 sm:py-12">
