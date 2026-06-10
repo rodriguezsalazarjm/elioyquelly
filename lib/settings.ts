@@ -27,6 +27,8 @@ export const settings: Settings = {
   bank_email: "zequelly.elio@example.com",
   mercadopago_enabled: process.env.NEXT_PUBLIC_MERCADOPAGO_ENABLED === "true",
   mercadopago_public_url: "",
+  save_the_date_url:
+    "https://txqbcwdfipvfpokdwfyq.supabase.co/storage/v1/object/public/media/save-the-date.mp4",
 };
 
 export function formatWeddingDate(date = settings.wedding_date) {

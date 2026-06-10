@@ -42,4 +42,5 @@ export type Settings = {
   bank_email: string;
   mercadopago_enabled: boolean;
   mercadopago_public_url: string;
+  save_the_date_url: string;
 };

@@ -11,6 +11,7 @@ import { IntroScreen } from "./IntroScreen";
 import { MapButtons } from "./MapButtons";
 import { MusicPlayer } from "./MusicPlayer";
 import { RSVPModal } from "./RSVPModal";
+import { VideoSplash } from "./VideoSplash";
 import { Section } from "./Section";
 import { SpotifyPlaylist } from "./SpotifyPlaylist";
 import { WeddingDetails } from "./WeddingDetails";
@@ -43,10 +44,14 @@ const heroSlides = [
   },
 ];
 
+type Phase = "intro" | "video" | "entered";
+
 export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProps) {
-  const [entered, setEntered] = useState(false);
+  const [phase, setPhase] = useState<Phase>("intro");
   const [activeSlide, setActiveSlide] = useState(0);
   const [rsvpOpen, setRsvpOpen] = useState(false);
+
+  const entered = phase === "entered";
 
   useEffect(() => {
     if (!entered) return;
@@ -60,7 +65,28 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
 
   return (
     <>
-      <AnimatePresence>{!entered ? <IntroScreen dateLabel={dateLabel} onEnter={() => setEntered(true)} /> : null}</AnimatePresence>
+      {/* Portada inicial */}
+      <AnimatePresence>
+        {phase === "intro" && (
+          <IntroScreen
+            dateLabel={dateLabel}
+            onEnter={() =>
+              settings.save_the_date_url ? setPhase("video") : setPhase("entered")
+            }
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Video Save The Date */}
+      <AnimatePresence>
+        {phase === "video" && (
+          <VideoSplash
+            onComplete={() => setPhase("entered")}
+            src={settings.save_the_date_url}
+          />
+        )}
+      </AnimatePresence>
+
       <MusicPlayer enabled={entered} src={settings.main_song_url} />
 
       {/* RSVP Modal */}
@@ -71,7 +97,7 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
           <button
             aria-label="Volver a la preinvitación"
             className="focus-ring fixed left-3 top-3 z-40 grid h-11 w-11 place-items-center rounded-full border border-[#F7F3EA]/24 bg-[#0C1D0E]/55 text-[#F7F3EA] shadow-2xl backdrop-blur-xl transition hover:bg-[#F7F3EA] hover:text-[#0C1D0E] sm:left-4 sm:top-4"
-            onClick={() => setEntered(false)}
+            onClick={() => setPhase("intro")}
             type="button"
           >
             <ArrowLeft size={17} />
