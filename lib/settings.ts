@@ -2,7 +2,7 @@ import type { Settings } from "./types";
 
 export const settings: Settings = {
   wedding_date: "2026-10-31T20:00:00-03:00",
-  rsvp_deadline: "2026-10-20",
+  rsvp_deadline: "2026-08-15",
   ceremony_place: "Boda eclesiástica",
   ceremony_time: "18:00 hrs",
   ceremony_address: "Av. José Miguel Carrera 3520, Paradero 6, San Miguel",

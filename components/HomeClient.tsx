@@ -182,8 +182,11 @@ export function HomeClient({ settings, dateLabel, guest = null }: HomeClientProp
                   abrazos y recuerdos que guardaremos para siempre.
                 </p>
                 <div className="gold-line mx-auto mt-8 w-20" />
-                <p className="font-script mt-6 whitespace-nowrap text-center text-3xl text-[#F7F3EA] sm:text-5xl">
-                  Con amor, Zequelly & Elio
+                <p className="font-script mt-6 text-center text-3xl text-[#A39F88] sm:text-4xl">
+                  Con Amor
+                </p>
+                <p className="font-script text-center text-4xl text-[#F7F3EA] sm:text-5xl">
+                  Zequelly y Elio
                 </p>
               </div>
             </motion.div>

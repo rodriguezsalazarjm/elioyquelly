@@ -20,7 +20,7 @@ export function IntroScreen({ dateLabel, onEnter }: IntroScreenProps) {
         <div className="mx-auto mb-6 grid h-12 w-12 place-items-center rounded-full border border-[#837E5E]/40 text-[#F7F3EA] sm:mb-8 sm:h-14 sm:w-14">
           <Heart size={22} strokeWidth={1.4} />
         </div>
-        <p className="responsive-kicker text-xs font-semibold uppercase text-[#A39F88]">
+        <p className="responsive-kicker text-xs font-semibold uppercase tracking-[0.28em] text-[#F7F3EA]">
           Nos casamos
         </p>
         <h1 className="intro-title font-script my-5 leading-none text-[#F7F3EA]">
