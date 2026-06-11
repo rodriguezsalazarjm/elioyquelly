@@ -16,7 +16,8 @@ export async function sendRsvpNotification(guest: Guest): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return; // sin configurar → no enviar
 
-  const to = process.env.NOTIFY_EMAIL || "ZEQUELLYB@GMAIL.COM";
+  // En minúsculas: Resend (modo prueba) compara exacto con el correo de la cuenta
+  const to = (process.env.NOTIFY_EMAIL || "zequellyb@gmail.com").toLowerCase();
   const from = process.env.RESEND_FROM || "Invitación Boda <onboarding@resend.dev>";
 
   const members = guest.members ?? [];

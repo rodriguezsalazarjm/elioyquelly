@@ -10,6 +10,7 @@ import {
   EyeOff,
   LogOut,
   MessageCircle,
+  MessageSquareText,
   Pencil,
   Plus,
   Search,
@@ -331,6 +332,8 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
   const [editGuest, setEditGuest] = useState<Guest | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [messageGuest, setMessageGuest] = useState<Guest | null>(null);
+  const [msgCopied, setMsgCopied] = useState(false);
 
   // Derived
   const groups = useMemo(
@@ -638,9 +641,23 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
                           <span className="text-xs text-[#A39F88]">—</span>
                         )}
                         {g.message && (
-                          <p className="mt-1 line-clamp-2 text-xs italic text-[#837E5E]">
-                            "{g.message}"
-                          </p>
+                          <button
+                            className="mt-1 flex w-full items-start gap-1 text-left"
+                            onClick={() => {
+                              setMessageGuest(g);
+                              setMsgCopied(false);
+                            }}
+                            title="Ver mensaje completo"
+                            type="button"
+                          >
+                            <MessageSquareText
+                              className="mt-0.5 flex-shrink-0 text-[#154D35]"
+                              size={12}
+                            />
+                            <span className="line-clamp-2 text-xs italic text-[#837E5E] underline decoration-dotted underline-offset-2 hover:text-[#154D35]">
+                              "{g.message}"
+                            </span>
+                          </button>
                         )}
                       </td>
                       <td className="px-4 py-3.5">
@@ -734,6 +751,43 @@ export function AdminDashboard({ guests: initialGuests, siteUrl }: Props) {
                 await handleImport(csv);
               }}
             />
+          </Modal>
+        ) : null}
+
+        {messageGuest ? (
+          <Modal
+            key="message"
+            onClose={() => setMessageGuest(null)}
+            title="Mensaje de amor"
+          >
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="font-semibold text-[#154D35]">{messageGuest.display_name}</p>
+                <p className="text-xs text-[#837E5E]">{messageGuest.group_name}</p>
+              </div>
+              <div className="max-h-[50vh] overflow-y-auto whitespace-pre-wrap rounded-2xl border border-[#837E5E]/25 bg-white px-5 py-4 text-[15px] italic leading-7 text-[#15351f]">
+                "{messageGuest.message}"
+              </div>
+              <button
+                className="flex items-center justify-center gap-2 rounded-full bg-[#154D35] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0C1D0E]"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(messageGuest.message);
+                  setMsgCopied(true);
+                  setTimeout(() => setMsgCopied(false), 2000);
+                }}
+                type="button"
+              >
+                {msgCopied ? (
+                  <>
+                    <Check size={16} /> ¡Copiado!
+                  </>
+                ) : (
+                  <>
+                    <ClipboardCopy size={16} /> Copiar mensaje
+                  </>
+                )}
+              </button>
+            </div>
           </Modal>
         ) : null}
       </AnimatePresence>
